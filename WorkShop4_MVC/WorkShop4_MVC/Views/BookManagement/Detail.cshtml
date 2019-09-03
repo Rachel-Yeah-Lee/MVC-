@@ -1,0 +1,131 @@
+﻿@model WorkShop4_MVC.Models.BookData
+
+@{
+    ViewBag.Title = "Detail";
+}
+
+<h2>lookDetail</h2>
+
+<div>
+    <h4>BookData</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.BookId)
+            @Html.DisplayTextFor(model => model.BookId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BookId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BookName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BookName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BookClassId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BookClassId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BookAuthor)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BookAuthor)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BookBoughtDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BookBoughtDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BookPublisher)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BookPublisher)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BookNote)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BookNote)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BookKeeper)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BookKeeper)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BookStatus)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BookStatus)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BookAmount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BookAmount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreateUser)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreateUser)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ModifyDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModifyDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ModifyUser)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ModifyUser)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
