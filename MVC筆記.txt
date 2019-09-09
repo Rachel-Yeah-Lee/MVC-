@@ -1,0 +1,58 @@
+貧血/富血/充血 Model
+Model是放商業邏輯的部分，很多商業邏輯的類別會放在Model資料夾中，包括資料的格式定義(eg.員工資料-->定義員工資料的時候記得為每項資料加註解，下次看的時候才清楚該變數是員工的甚麼資料)
+，
+對資料的處理邏輯似乎放在Controller裏面，Controller取用會向Mdoel裏的資料類別(物件)
+https://docs.microsoft.com/en-us/dotnet/api/system.web.mvc.controller.view?view=aspnet-mvc-5.2			Controller.View()
+https://docs.microsoft.com/zh-tw/dotnet/api/microsoft.aspnetcore.mvc.actionresult?view=aspnetcore-2.1	ActionResult Class實作IActionResult，衍生JsonResult,ViewResult,ObjectResult等等類別
+https://docs.microsoft.com/zh-tw/dotnet/api/microsoft.aspnetcore.mvc.iactionresult?view=aspnetcore-2.1	IActionResult
+ActionResult裏面有一個抽象方法ActionResult.ExecuteResult(ControllerContext)讓衍生類別去"實作"要怎麼處理自己的方法(action)所回傳的結果(result)
+會發現到JsonResult和ViewResult也有實作IActionResult，因為他們的父類別ActionResult實作了IActionResult
+簡單來說: View()回傳了ActionResult物件，我們除了可以用ActionResult去接也可以用IActionResult去接
+問題:如果用的是介面去接回傳的結果，那類別中如果有其他沒有定義於介面的方法不就不能用了，這樣不是功能變少了嗎，不過換個角度想，介面的目的就是為了可以擴充傳入不同的類別，
+能有不同的實作，所以如果用介面去接回傳的結果，那意思就是我們只會用到介面所定義的方法，如果要用到該類別的其他功能我們就不用介面去接。
+
+type="submit" 按鈕備案下去之後，html會往上看有沒有form的標籤，讀取裏面的actino屬性看要進入哪個action，method則是看用哪種方式傳送資料給後端，html.BeginForm([ActionName],[ControllerName])以POST方法送資料，因為html預設是用GET
+http://blog.toright.com/posts/1203/%E6%B7%BA%E8%AB%87-http-method%EF%BC%9A%E8%A1%A8%E5%96%AE%E4%B8%AD%E7%9A%84-get-%E8%88%87-post-%E6%9C%89%E4%BB%80%E9%BA%BC%E5%B7%AE%E5%88%A5%EF%BC%9F.html
+**上方網址: 淺談 HTTP Method：表單中的 GET 與 POST 有什麼差別？
+
+LayOut:主版頁面
+放在Views資料夾下的Shares加入MVC5版面配置頁
+
+ViewEngine:
+Request -> Controller(*.cs檔，會回傳view或是其他ActionResult)) -> ViewEngine(會將*.cshtml檔案解析轉譯成html，再傳到瀏覽器)(在server端執行) -> 瀏覽器收到html語法，再呈現給user
+
+SCOPE_INDETITY()		傳回同一個區域的可識別的資料(PK的資料)，後面會接著ExecuteScalar()之後就會拿到新增後的資料的主索引值，對於使用者的使用，如果在新增的時候誤按新增，可以直接跳到修改頁面讓使用者做更改。
+SqlCommand.ExecuteScalar()		傳回資料表中受更動的結果第一筆第一的欄位
+SqlCommand.ExecuteNonQuery()	傳回受影響的資料列數
+
+錨點機制
+
+sql [工具] -> [sql profiler] 很好用
+下次改進:
+1. 在HTML中的className命名方式要一致
+2. show Detail 中藥改善BookId如果不符合資料庫格式的狀況、Delete 要加上transaction
+2. 2019/09/03的code review 改善的地方
+3. 驗證的部分
+4. 專案名稱要和專案功能貼切，其中可以用資料夾包起來，資料夾才可以用和自己的相關的名稱ex.Workshop4_MVC
+***arg.BookNote==null? (Object)DBNull.Value:arg.BookNote) //資料庫中的null似乎沒辦法接受c#的null型態，因此如果在前端取到空值需要轉換成資料庫的空值DBNULL.Value
+
+參考:
+更改日期格式:https://social.msdn.microsoft.com/Forums/zh-TW/aafb6ae7-3f40-41f0-bb81-b36fa618c536/229142030925226201229-1997921320?forum=233
+
+-------------------Workshop5-----------------
+ajax : Asynchronous JavaScript and Xml
+ActionResult中 return View()是回傳整個網頁，that's，如果網頁內容很多的話會載入比較久，使用者的體驗也會比較差，
+利用ajax技術可以
+ajax 好像主要把前端網頁內容傳到Controller，然後也可以接收Controller傳回來的回應
+若是單純想從Controller傳資料到View，可以運用@model或是ViewBag，不是用ajax
+問題:kendoDropDownList從遠端取資料ex.transport.read.url:"/[Controller]/[ActinoName]"也是運用ajax技術嗎?還是只是'非同步執行'概念的運用?
+非同步執行和同步執行的優缺點?
+
+更改了專案的名稱為BookManagement，同時也需要將檔案中的webconfig檔、Controller的using namespace、View裏面@models的名稱改掉，
+需要更改的地方都在專案裡面，在C:\Users\User\AppData\Local\Temp\Temporary ASP.NET Files\vs\a6e44ea3\d69b6a0d 裏面的東西不需要做更動，
+原因是那些都是執行時才會產生的檔案。
+
+html中的value是屬性val()是取值函數，kendo中的vlau()是取值函數
+**$(":hidden#hidden_book_class_Id").value會出現undefine，查一下jQuery中val()和value的差異
+***區域變數命名用小寫
+***Controller專注在和後端取值，所以命名上不要用到和前端View的標籤，ex.GetBookClassToDrop()不好 改成GetBookClass()代表取書籍類別 這樣就好

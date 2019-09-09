@@ -1,128 +1,78 @@
-﻿@model WorkShop4_MVC.Models.BookData
+﻿@model BookManagement.Models.BookData
 
 @{
     ViewBag.Title = "Detail";
 }
 
-<h2>lookDetail</h2>
+<h2>圖書明細</h2>
 
 <div>
-    <h4>BookData</h4>
+    <h4>圖書明細</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.BookId)
-            @Html.DisplayTextFor(model => model.BookId)
+            書名
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.BookId)
+            @Model.BookName
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.BookName)
+           作者
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.BookName)
+            @Model.BookAuthor
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.BookClassId)
+           出版商
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.BookClassId)
+           @Model.BookPublisher
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.BookAuthor)
+            內容簡介
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.BookAuthor)
+            @Model.BookNote
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.BookBoughtDate)
+            購書日期
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.BookBoughtDate)
+            @Model.BookBoughtDate
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.BookPublisher)
+            圖書類別
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.BookPublisher)
+           @Model.BookClassName
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.BookNote)
+            借閱狀態
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.BookNote)
+            @Model.BookStatusName
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.BookKeeper)
+            借閱人
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.BookKeeper)
+            @Model.BookKeeper
         </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.BookStatus)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.BookStatus)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.BookAmount)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.BookAmount)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreateDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.CreateUser)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.CreateUser)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ModifyDate)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ModifyDate)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.ModifyUser)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ModifyUser)
-        </dd>
-
     </dl>
 </div>
 <p>

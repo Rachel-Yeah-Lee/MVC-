@@ -1,128 +1,213 @@
-﻿@model WorkShop4_MVC.Models.SearchBookStatusArg
+﻿@model BookManagement.Models.SearchBookStatusArg
 @{
     ViewBag.Title = "Index";
 }
 
 <h2>查詢畫面</h2>
-@using (Html.BeginForm("Index", "BookManagement", FormMethod.Post, new { id = "SearchArg" }))
-{
-    <div class="form-horizontal">
 
-        <div class="form-group">
-            @Html.LabelFor(model =>model.BookName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(model => model.BookName, new { @class = "form-control" })
-            </div>
+<div class="form-horizontal">
+    <div class="form-group">
+        <label for="input_book_name" class="control-label col-md-2">書名</label>
+        <div class="col-md-10">
+            <input id="input_book_name" class="form-control" type="text" name="BookName" />
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.BookClass, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.BookClass, (List<SelectListItem>)ViewBag.BookClass, "", new { @class = "form-control" })
-            </div>
-        </div>
-
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.BookKeeper, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.BookKeeper, (List<SelectListItem>)ViewBag.BookKeeper, "", new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(model => model.BookStatus, new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.BookStatus, (List<SelectListItem>)ViewBag.BookStatus, "", new { @class = "form-control" })
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-2">
-            </div>
-            <div class="col-md-10">
-                <input type="submit" value="查詢" />
-                @Html.ActionLink("add", "AddBook")
-                @Html.ActionLink("清除", "Index")
-            </div>
-        </div>
-        @if (ViewBag.SearchResult!=null) {
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr id="searchResult">
-                    <th>圖書類別</th>
-                    <th>書名</th>
-                    <th>購書日期</th>
-                    <th>借閱狀態</th>
-                    <th>借閱人</th>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in (List<WorkShop4_MVC.Models.SearchBookStatusResult>)ViewBag.SearchResult)
-                {
-                    //string BookName;
-                    @*@(string.IsNullOrEmpty(item.BookName) ? BookName = " " : BookName = item.BookName);*@
-                    <tr id='@item.BookId'>
-                    <td>@item.BookClass</td>
-                    @*<td><a class="@item.BookId" >@item.BookName</a></td>*@
-                    <td>@Html.ActionLink((string.IsNullOrEmpty(item.BookName) ? " " : item.BookName), "Detail", new { BookId = @item.BookId })</td>
-                    <td>@item.BoughtDate</td>
-                    <td>@item.BookStatus</td>
-                    <td>@item.BookKeeper</td>
-                    <td>@Html.ActionLink("修改", "UpdateEmployee", new { id = item.BookId, @value = @item.BookId })</td>
-                    <td>
-                        <a class="btnDelete" href="#" ;">刪除</a>
-                        <input class="hidEmployeeId" type="hidden" value='@item.BookId' />
-                    </td>
-                </tr>
-                }
-            </tbody>
-        </table>
-        }
     </div>
-}
+
+    <div class="form-group">
+        <label for="drop_book_class" class="control-label col-md-2">圖書類別</label>
+        <div class="col-md-10">
+            <input id="drop_book_class" class="form-control" type="text" name="BookClass" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="drop_book_keeper" class="control-label col-md-2">借閱人</label>
+        <div class="col-md-10">
+            <input id="drop_book_keeper" class="form-control" type="text" name="BookKeeper" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="drop_book_status" class="control-label col-md-2">借閱狀態</label>
+        <div class="col-md-10">
+            <input id="drop_book_status" class="form-control" type="text" name="BookStatus" />
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <div class="col-md-2">
+        </div>
+        <div class="col-md-10">
+            <button id="btn_get_book_data">查詢</button>
+            <button id="btn_add" onclick="Add()">新增</button>
+        </div>
+    </div>
+    <div id="grid"></div>
+</div>
 <script type="text/javascript">
     $(document).ready(function () {
-        //$(".lookDetail").click(function (e) {
-        //    e.preventDefault();
-        //    var tr = this.closest("tr");
-        //    $.ajax({
-        //        type: "POST",
-        //        url: "/BookManagement/lookDetail",
-        //        data: "BookId=" + tr.id,
-        //        dataType: "json",
-        //    })
-        //    location.href = '~/BookManagement/lookDetail.cshtml'
-        //});
-        $(".btnDelete").click(function (e) {
-            e.preventDefault();
-            if (confirm("是否刪除")) {
-                var tr = this.closest("tr");
-                $.ajax({
-                    type: "POST",
-                    url: "/BookManagement/deleteBookData",
-                    data: "BookId=" + $(this).next().val(),
-                    dataType: "json",
-                    success: function (response) {
-                        if (response == true) {
-                            $(tr).remove();
-                            alert("刪除成功")
-                        } else {
-                            alert("無法刪除")
-                        }
-                       
-                    }, error: function (error) {
-                        alert("系統錯誤");
+        $("#drop_book_status").kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            optionLabel: " ",
+            dataSource: {
+                transport: {
+                    read: {
+                        dataType: "json",
+                        url: "/bookManagement/GetBookStatusToDrop",  //Aciton 命名GetBookStatus
+                        type: "Post"
                     }
-                });
-                return false;
-            }
-           
-           
+                }
+            },
+
         });
-    })
-    
+        $("#drop_book_class").kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            optionLabel: " ",
+            dataSource: {
+                transport: {
+                    read: {
+                        dataType: "json",
+                        url: "/bookManagement/GetBookClassToDrop",
+                        type: "Post"
+                    }
+                }
+            }
+        });
+        $("#drop_book_keeper").kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            optionLabel: " ",
+            dataSource: {
+                transport: {
+                    read: {
+                        dataType: "Json",
+                        url: "/bookManagement/GetMemberNameToDrop",
+                        type: "Post"
+                        
+                    }
+                }
+            }
+        });
+        //查詢    點一下查詢會產生一個kendoGrid 應該要先做好kendoGrid，按下查詢後再將dataSource傳入
+        $("#btn_get_book_data").click(function () {
+            $.ajax({
+                url: "/bookManagement/GetGridData",
+                dataType: "json",
+                type:"POST",
+                data: {
+                    "BookName": $("#input_book_name").val(),
+                    "BookClass": $("#drop_book_class").val(),
+                    "BookKeeperID": $("#drop_book_keeper").val(),
+                    "BookStatus": $("#drop_book_status").val()
+                }
+            }).done(function (searchResult) {
+                    $("#grid").kendoGrid({
+                        dataSource: {
+                            data: searchResult,
+                            schema: {
+                                model: {
+                                    fields: {
+                                        BookId: { type: "int" },
+                                        BookClass: { type: "string" },
+                                        BookName: { type: "string" },
+                                        BookBoughtDate: { type: "string" },
+                                        BookStatus: { type: "string" },
+                                        BookKeeper: {type:"string"}
+                                    }
+                                }
+                            }
+                        },
+                        height: 500,
+                        columns: [
+                            { hidden: true, field: "BookId", title: "書籍代碼" },
+                            { field: "BookClass", title: "圖書類別", width: "20%" },
+                            { field: "BookName", title: "書名", width: "40%" },
+                            { field: "BookBoughtDate", title: "購書日期", width: "15%" },
+                            { field: "BookStatus", title: "借閱狀態", width: "15%" },
+                            { field: "BookKeeper", title: "借閱人", width: "10%" },
+                            {
+                                command: { text: "刪除", click: deleteBook },
+                                title: " ",
+                                width: "120px"
+                            },
+                            {
+                                command: { text: "借閱紀錄", click: Record },
+                                title: " ",
+                                width: "120px"
+                            },
+                            {
+                                command: { text: "編輯", click: updateBook },
+                                title: " ",
+                                width: "120px"
+                            }
+                        ]
+                    })
+                })
+        })
+    });
+    //產生下拉選單函數
+    function produceDropDownList(selector, url) {
+        $(selector).kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            optionLabel: " ",
+            dataSource: {
+                transport: {
+                    read: {
+                        dataType: "Json",
+                        url: "/bookManagement/" + url,
+                        type: "Post"
+
+                    }
+                }
+            }
+        });
+    }
+    //跳到新增頁面
+    function Add() {
+        //$.get('/BookManagement/AddBook')
+        location.href = '/BookManagement/AddBook'
+    }
+    //刪除書籍   **kendoGrid的dataSource還沒做清除，試試 .dataSource.read()  .dataSource.data([newDataSource]) 讓kendoGrid更新
+    function deleteBook(e) {
+        e.preventDefault();
+        if (confirm("是否刪除")) {      
+            var tr = $(e.target).closest("tr");   
+            var rowId = this.dataItem(tr).BookId;         
+            localStorage.setItem("BookId", rowId);
+            $.ajax({
+                type: "POST",
+                url: "/BookManagement/DeleteBook",
+                data: "BookId=" + localStorage.getItem("BookId"),
+                dataType: "json",
+                success: function (response) {
+                    if (response == true) {
+                        $(tr).remove();
+                        alert("刪除成功")
+                    } else {
+                        alert("無法刪除")
+                    }
+
+                }, error: function (error) {
+                    alert("系統錯誤");
+                }
+            });
+            return false;
+        }
+    }
+    //修改
+    function updateBook(e) {
+        e.preventDefault();
+        var tr = $(e.target).closest("tr");
+        var rowId = this.dataItem(tr).BookId;        ///rowId 
+        location.href = "/BookManagement/UpdateBook?BookId=" + rowId;
+    }
+    //借閱紀錄
+    function Record() {
+
+    }
 </script>
 
 

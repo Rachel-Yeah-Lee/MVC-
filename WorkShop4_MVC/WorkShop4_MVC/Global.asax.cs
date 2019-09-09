@@ -1,7 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace WorkShop4_MVC
+namespace BookManagement
 {
     public class MvcApplication : System.Web.HttpApplication
     {

@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Web;
 
-namespace WorkShop4_MVC.Models
+namespace BookManagement.Models
 {
     public class UpdateArg
     {

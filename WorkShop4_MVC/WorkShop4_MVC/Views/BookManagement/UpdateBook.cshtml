@@ -1,0 +1,176 @@
+﻿@model BookManagement.Models.BookData
+@{
+    ViewBag.Title = "UpdateBook";
+}
+<h2 style="font-family:Microsoft JhengHei;">修改圖書</h2>
+<form asp-controller="BookManagement" asp-action="UpdateBook" method="post">
+    @*@Html.AntiForgeryToken()*@
+
+    <div class="form-horizontal">
+        <hr />
+        <div class="form-group">
+            <label for="inpu_book_name" class="control-label col-md-2 required">書名</label>
+            <div class="col-md-10">
+                <input id="inpu_book_name" class="form-control" type="text" name="BookName" value="@Model.BookName" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input_book_author" class="control-label col-md-2 required">作者</label>
+            <div class="col-md-10">
+                <input id="input_book_author" class="form-control" type="text" name="BookAuthor" value="@Model.BookAuthor" required/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input_book_publisher" class="control-label col-md-2 required">出版商</label>
+            <div class="col-md-10">
+                <input id="input_book_publisher" class="form-control" type="text" name="BookPublisher" value="@Model.BookPublisher" required/>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="input_book_note" class="control-label col-md-2 required">內容簡介</label>
+            <div class="col-md-10">
+                <textarea id="input_book_note" class="form-control" name="BookNote" maxlength="1000" rows="10" cols="10" placeholder="最多輸入1000字..." required>@Model.BookNote</textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="input_book_bought_date" class="control-label col-md-2 required">購書日期</label>
+        <div class="col-md-10">
+            <input id="input_book_bought_date" class="form-control" type="date" name="BookBoughtDate" value="@Model.BookBoughtDate" required/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="drop_book_class" class="control-label col-md-2 required">圖書類別</label>
+        <div class="col-md-10">
+            <input id="drop_book_class" type="text" class="form-control" onchange="changeClass(this)" name="BookClassId" value="@Model.BookClassId" required/>
+            <input id="hidden_book_class_Id" type="hidden" name="BookClassName" value="@Model.BookClassName"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="drop_book_status" class="control-label col-md-2 required">借閱狀態</label>
+        <div class="col-md-10">
+            <input id="drop_book_status" type="text" class="form-control" name="BookStatusId" value="@Model.BookStatusId" required/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="drop_book_keeper" class="control-label col-md-2">借閱人</label>
+        <div class="col-md-10">
+            <input id="drop_book_keeper" type="text" class="form-control" name="BookKeeper" value="@Model.BookKeeper"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn" value="存檔" style="background-color: #99b2db; color:#194284" />
+            <input type="button" class="btn" id="delete" value="刪除" href="#" style="background-color: #99b2db; color:#194284">
+            <input class="hidBookID" type="hidden" value='@Model.BookId' />
+        </div>
+    </div>
+
+</form>
+<div>
+    <input type="button" value="返回" onclick="location.href='/BookManagement/Index'" class="btn" style="background-color: #99b2db; color:#194284" />
+</div>
+
+<script>  ///
+    $(document).ready(function () {
+        $("#drop_book_status").kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            dataSource: {
+                transport: {
+                    read: {
+                        dataType: "json",
+                        url: "/bookManagement/GetBookStatusToDrop",
+                        type: "Post"
+                    }
+                }
+            },
+            change: changeStatus
+        });
+        $("#drop_book_class").kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            dataSource: {
+                transport: {
+                    read: {
+                        dataType: "json",
+                        url: "/bookManagement/GetBookClassToDrop",
+                        type: "Post"
+                    }
+                }
+            }
+        });
+        $("#drop_book_keeper").kendoDropDownList({
+            dataTextField: "Text",
+            dataValueField: "Value",
+            dataSource: {
+                transport: {
+                    read: {
+                        dataType: "json",
+                        url: "/bookManagement/GetMemberNameToDrop",
+                        type: "Post"
+                    }
+                }
+            }
+        });
+        //控制借閱狀態與借閱人欄位關聯    後端還沒有防治 F12下 $("#drop_book_keeper").data("kendoDropDownList").value("");
+        var check = $("#drop_book_status").val();
+        if (check == "A" || check == "U") {
+            $("#drop_book_keeper").data("kendoDropDownList").enable(false);
+            $("#drop_book_keeper").data("kendoDropDownList").value("");
+
+        }
+        else if (check == "B" || check == "C") {
+            $("#drop_book_keeper").data("kendoDropDownList").enable(true);
+        }
+        //刪除書籍
+        $("#delete").click(function (e) {
+            if (confirm('確定是否刪除這筆紀錄?')) {
+                e.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/bookManagement/DeleteBook",
+                    data: "BookId=" + @Model.BookId,
+                    dataType: "json",
+                    success: function (response) {
+                        if (response == true) { 
+                            alert("圖書已刪除");
+                            location.href = '/BookManagement/Index'
+                        }
+                        else {
+                            alert("圖書已借出");
+                        }
+                    },
+                    error: function (error) {
+                        alert("系統發生錯誤");
+                    }
+                });
+            }
+        });
+    });       
+    //書籍類別更改同時更改model.BookClassId
+    function changeClass(e) {  
+        $(":hidden#hidden_book_class_Id").value = $("#drop_book_status").data("kendoDropDownList").value();
+    }   
+    //控制借閱狀態與借閱人欄位關聯
+    function changeStatus(e) {
+        e.preventDefault();
+        var Check = $("#drop_book_status").data("kendoDropDownList").value();
+        if (Check == "A" || Check == "U") {
+            $("#drop_book_keeper").data("kendoDropDownList").enable(false);
+            $("#drop_book_keeper").data("kendoDropDownList").value("");
+            
+        }
+        else if (Check == "B" || Check == "C") {
+            $("#drop_book_keeper").data("kendoDropDownList").value("0001");
+            $("#drop_book_keeper").data("kendoDropDownList").enable(true);
+        }
+    }
+</script>

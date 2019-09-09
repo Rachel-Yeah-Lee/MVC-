@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-namespace WorkShop4_MVC.Models
+namespace BookManagement.Models
 {
     public class SearchBookStatusArg
     {
@@ -8,7 +8,7 @@ namespace WorkShop4_MVC.Models
         [DisplayName("圖書類別")]
         public string BookClass { get; set; }
         [DisplayName("借閱人")]
-        public string BookKeeper { get; set; }
+        public string BookKeeperID { get; set; }    //這裡是大寫的ID，Index裏ajax也要同樣的名稱才能對上給值
         [DisplayName("借閱狀態")]
         public string BookStatus { get; set; }
 
